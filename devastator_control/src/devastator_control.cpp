@@ -10,9 +10,9 @@
 
 class Devastator {
 public:
-	Devastator();
+  Devastator();
   void BuzzPublisher();
-  	
+    
 private:
   void VelCallback(const geometry_msgs::Twist::ConstPtr& twist);
   void OverrideCallback(const std_msgs::Bool::ConstPtr& override_msg);
@@ -31,8 +31,8 @@ private:
   void dIR_BR_Callback(const sensor_msgs::Range::ConstPtr& dIR_BR_msg);
   void dIR_BL_Callback(const sensor_msgs::Range::ConstPtr& dIR_BL_msg);
 
-	ros::NodeHandle nh_;
-	ros::Publisher nav_flag_pub;
+  ros::NodeHandle nh_;
+  ros::Publisher nav_flag_pub;
   ros::Publisher buzz_pub;
   ros::Subscriber vel_sub;
   ros::Subscriber override_sub;
@@ -67,7 +67,6 @@ Devastator::Devastator()
 {
   nav_flag_pub = nh_.advertise<std_msgs::Int32>("nav_flag", 1);
   buzz_pub = nh_.advertise<std_msgs::Bool>("buzz_flag", 1);
-
   override_sub = nh_.subscribe<std_msgs::Bool>("override_status", 10, &Devastator::OverrideCallback, this);
   detect_sub = nh_.subscribe<std_msgs::Int32>("Detect_Flag", 10, &Devastator::DetectCallback, this);
   vel_sub = nh_.subscribe<geometry_msgs::Twist>("cmd_vel", 10, &Devastator::VelCallback, this);
@@ -78,8 +77,8 @@ Devastator::Devastator()
   dIR_F_sub = nh_.subscribe<sensor_msgs::Range>("dIR_F", 10, &Devastator::dIR_F_Callback,this);
   dIR_BR_sub = nh_.subscribe<sensor_msgs::Range>("dIR_BR", 10, &Devastator::dIR_BR_Callback,this);
   dIR_BL_sub = nh_.subscribe<sensor_msgs::Range>("dIR_BL", 10, &Devastator::dIR_BL_Callback,this);
-  
 }
+
 
 void Devastator::DetectCallback(const std_msgs::Int32::ConstPtr& detect_msg)
 {
@@ -93,7 +92,6 @@ void Devastator::DetectCallback(const std_msgs::Int32::ConstPtr& detect_msg)
   
   if (detect && first_buzz){
     buzz_flag.data = true;
-    
   }
   else {
     buzz_flag.data = false; 
@@ -106,11 +104,11 @@ void Devastator::OverrideCallback(const std_msgs::Bool::ConstPtr& override_msg)
 {
   override = override_msg->data;
   if (override){
-    buzz_flag.data = true;
+    //buzz_flag.data = true;
     ManualNav_Control();
   }
   else {
-    buzz_flag.data = false;
+    //buzz_flag.data = false;
     AutoNav_Control();
   }
 }
@@ -123,7 +121,7 @@ void Devastator::VelCallback(const geometry_msgs::Twist::ConstPtr& vel_msg)
 
 void Devastator::sonic_FF_Callback(const sensor_msgs::Range::ConstPtr& sonic_FF_msg)
 {
-	sonic_FF_range = sonic_FF_msg->range;
+  sonic_FF_range = sonic_FF_msg->range;
 }
 
 void Devastator::sonic_FD_Callback(const sensor_msgs::Range::ConstPtr& sonic_FD_msg)
@@ -133,24 +131,24 @@ void Devastator::sonic_FD_Callback(const sensor_msgs::Range::ConstPtr& sonic_FD_
 
 void Devastator::aIR_FR_Callback(const sensor_msgs::Range::ConstPtr& aIR_FR_msg)
 {
-	aIR_FR_range = aIR_FR_msg->range;
+  aIR_FR_range = aIR_FR_msg->range;
 }
 
 void Devastator::aIR_FL_Callback(const sensor_msgs::Range::ConstPtr& aIR_FL_msg)
 {
-	aIR_FL_range = aIR_FL_msg->range;
+  aIR_FL_range = aIR_FL_msg->range;
 }
 void Devastator::dIR_F_Callback(const sensor_msgs::Range::ConstPtr& dIR_F_msg)
 {
-	dIR_F_range = dIR_F_msg->range;
+  dIR_F_range = dIR_F_msg->range;
 }
 void Devastator::dIR_BR_Callback(const sensor_msgs::Range::ConstPtr& dIR_BR_msg)
 {
-	dIR_BR_range = dIR_BR_msg->range;
+  dIR_BR_range = dIR_BR_msg->range;
 }
 void Devastator::dIR_BL_Callback(const sensor_msgs::Range::ConstPtr& dIR_BL_msg)
 {
-	dIR_BL_range = dIR_BL_msg->range;
+  dIR_BL_range = dIR_BL_msg->range;
 }
 
 void Devastator::AutoNav_Control()
@@ -275,8 +273,7 @@ int main(int argc, char** argv)
   Devastator devastator;
   ros::Rate r(10);
   while (ros::ok()){
-    ros::spinOnce();
-    
+    ros::spinOnce(); 
     r.sleep();    
   }
   return 0;
