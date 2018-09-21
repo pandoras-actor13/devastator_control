@@ -12,7 +12,7 @@ class Devastator {
 public:
   Devastator();
   void BuzzPublisher();
-    
+
 private:
   void VelCallback(const geometry_msgs::Twist::ConstPtr& twist);
   void OverrideCallback(const std_msgs::Bool::ConstPtr& override_msg);
@@ -21,8 +21,8 @@ private:
   void ManualNav_Control();
   void AssessMove();
   void FlagPublisher(int x);
-  
-  
+
+
   void sonic_FF_Callback(const sensor_msgs::Range::ConstPtr& sonic_FF_msg);
   void sonic_FD_Callback(const sensor_msgs::Range::ConstPtr& sonic_FD_msg);
   void aIR_FR_Callback(const sensor_msgs::Range::ConstPtr& aIR_FR_msg);
@@ -59,7 +59,7 @@ private:
   int detect;
 
   std_msgs::Int32 buzz_flag;
-  
+
 };
 
 
@@ -83,18 +83,18 @@ Devastator::Devastator()
 void Devastator::DetectCallback(const std_msgs::Int32::ConstPtr& detect_msg)
 {
   detect = detect_msg->data;
-  
+
   if (!detect) {
     first_buzz = true;
     AutoNav_Control();
   }
   else ManualNav_Control();
-  
+
   if (detect && first_buzz){
     buzz_flag.data = true;
   }
   else {
-    buzz_flag.data = false; 
+    buzz_flag.data = false;
   }
 
   buzz_pub.publish(buzz_flag);
@@ -104,11 +104,9 @@ void Devastator::OverrideCallback(const std_msgs::Bool::ConstPtr& override_msg)
 {
   override = override_msg->data;
   if (override){
-    //buzz_flag.data = true;
     ManualNav_Control();
   }
   else {
-    //buzz_flag.data = false;
     AutoNav_Control();
   }
 }
@@ -160,7 +158,7 @@ void Devastator::AutoNav_Control()
   float dIR_F_zone = 0.0;
   float dIR_BR_zone = 1.0;
   float dIR_BL_zone = 1.0;
-  
+
   if (aIR_FR_range > aIR_FR_zone && aIR_FL_range > aIR_FL_zone)
   {
     if (sonic_FD_range > sonic_FD_zone && sonic_FF_range > sonic_FF_zone)
@@ -187,7 +185,7 @@ void Devastator::AutoNav_Control()
           FlagPublisher(4);
       }
     }
-      
+
   }
 
   else if (aIR_FR_range > aIR_FR_zone && aIR_FL_range <= aIR_FL_zone)
@@ -208,7 +206,7 @@ void Devastator::AutoNav_Control()
         else
           FlagPublisher(4);
       }
-    
+
     else if (dIR_BR_range != dIR_BR_zone && dIR_BL_range != dIR_BL_zone)
     {
       if ((sonic_FD_range > sonic_FD_zone && sonic_FF_range > sonic_FF_zone) ||
@@ -239,7 +237,7 @@ void Devastator::AutoNav_Control()
   }
   else
     FlagPublisher(5);
-  
+
 }
 
 void Devastator::ManualNav_Control()
@@ -269,12 +267,12 @@ int main(int argc, char** argv)
 {
   ros::init(argc, argv, "devastator_control");
   ROS_INFO("Node Started...");
-  
+
   Devastator devastator;
   ros::Rate r(10);
   while (ros::ok()){
-    ros::spinOnce(); 
-    r.sleep();    
+    ros::spinOnce();
+    r.sleep();
   }
   return 0;
 }
