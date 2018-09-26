@@ -14,6 +14,8 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
 )
 
+set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
+
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
 
@@ -117,7 +119,6 @@ catkin_package(
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 include_directories(
-# include
   ${catkin_INCLUDE_DIRS}
 )
 
@@ -135,7 +136,8 @@ include_directories(
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
  add_executable(devastator_control_node src/devastator_control.cpp)
- add_executable(devastator_teleop src/devastator_joy_teleop.cpp)
+ add_executable(devastator_joyteleop src/devastator_joy_teleop.cpp)
+ add_executable(devastator_keyteleop src/devastator_key_teleop.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -148,10 +150,10 @@ include_directories(
  add_dependencies(devastator_control_node ${devastator_control_node_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
- target_link_libraries(devastator_control_node
-   ${catkin_LIBRARIES}
- )
- target_link_libraries(devastator_teleop ${catkin_LIBRARIES})
+ target_link_libraries(devastator_control_node ${catkin_LIBRARIES})
+ target_link_libraries(devastator_joyteleop ${catkin_LIBRARIES})
+ target_link_libraries(devastator_keyteleop ${catkin_LIBRARIES})
+
 #############
 ## Install ##
 #############

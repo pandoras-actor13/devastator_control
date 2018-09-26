@@ -11,7 +11,7 @@
 class Devastator {
 public:
   Devastator();
-  void BuzzPublisher();
+  //void BuzzPublisher();
 
 private:
   void VelCallback(const geometry_msgs::Twist::ConstPtr& twist);
@@ -68,7 +68,6 @@ Devastator::Devastator()
   nav_flag_pub = nh_.advertise<std_msgs::Int32>("nav_flag", 1);
   buzz_pub = nh_.advertise<std_msgs::Bool>("buzz_flag", 1);
   override_sub = nh_.subscribe<std_msgs::Bool>("override_status", 10, &Devastator::OverrideCallback, this);
-  //detect_sub = nh_.subscribe<std_msgs::Int32>("Detect_Flag", 10, &Devastator::DetectCallback, this);
   vel_sub = nh_.subscribe<geometry_msgs::Twist>("cmd_vel", 10, &Devastator::VelCallback, this);
   sonic_FF_sub = nh_.subscribe<sensor_msgs::Range>("sonic_FF", 10, &Devastator::sonic_FF_Callback,this);
   sonic_FD_sub = nh_.subscribe<sensor_msgs::Range>("sonic_FD", 10, &Devastator::sonic_FD_Callback,this);
@@ -79,26 +78,6 @@ Devastator::Devastator()
   dIR_BL_sub = nh_.subscribe<sensor_msgs::Range>("dIR_BL", 10, &Devastator::dIR_BL_Callback,this);
 }
 
-
-/*void Devastator::DetectCallback(const std_msgs::Int32::ConstPtr& detect_msg)
-{
-  detect = detect_msg->data;
-
-  if (!detect) {
-    first_buzz = true;
-//    AutoNav_Control();
-  }
-//  else //ManualNav_Control();
-
-  if (detect && first_buzz){
-    buzz_flag.data = true;
-  }
-  else {
-    buzz_flag.data = false;
-  }
-
-  buzz_pub.publish(buzz_flag);
-}*/
 
 void Devastator::OverrideCallback(const std_msgs::Bool::ConstPtr& override_msg)
 {
@@ -165,7 +144,7 @@ void Devastator::AutoNav_Control()
       FlagPublisher(1);
     else
     {
-      if (dIR_BR_range == dIR_BR_zone && dIR_BL_range == dIR_BL_zone)
+      if (dIR_BR_range && dIR_BL_range)
       {
         FlagPublisher(5);
         if (aIR_FR_range > aIR_FL_range)
@@ -196,7 +175,7 @@ void Devastator::AutoNav_Control()
 
   else if (aIR_FR_range <= aIR_FR_zone && aIR_FL_range <= aIR_FL_zone)
   {
-    if (dIR_BR_range == dIR_BR_zone && dIR_BL_range == dIR_BL_zone)
+    if (dIR_BR_range && dIR_BL_range)
       {
         FlagPublisher(5);
         if (aIR_FR_range > aIR_FL_range)
@@ -207,7 +186,7 @@ void Devastator::AutoNav_Control()
           FlagPublisher(4);
       }
 
-    else if (dIR_BR_range != dIR_BR_zone && dIR_BL_range != dIR_BL_zone)
+    else if (!dIR_BR_range && !dIR_BL_range)
     {
       if ((sonic_FD_range > sonic_FD_zone && sonic_FF_range > sonic_FF_zone) ||
       (sonic_FD_range > sonic_FD_zone && sonic_FF_range > sonic_FF_zone) ||
@@ -225,7 +204,7 @@ void Devastator::AutoNav_Control()
         FlagPublisher(6);
     }
 
-    else if ((dIR_BR_range != dIR_BR_zone && dIR_BL_range == dIR_BL_zone) || (dIR_BR_range == dIR_BR_zone && dIR_BL_range != dIR_BL_zone))
+    else if ((!dIR_BR_range && dIR_BL_range) || (dIR_BR_range && !dIR_BL_range))
     {
       if (aIR_FR_range > aIR_FL_range)
           FlagPublisher(2);
@@ -242,6 +221,10 @@ void Devastator::AutoNav_Control()
 
 void Devastator::ManualNav_Control()
 {
+  //Reset to 0.0 any inconsistent readings.
+  if (linear_  == -0.0) linear_ = 0.0;
+  if (angular_ == -0.0) angular_ = 0.0;
+
   if (linear_ < 0.0) {
     FlagPublisher(5);
   }else if (linear_ > 0.0) {
