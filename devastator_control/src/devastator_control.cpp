@@ -16,7 +16,7 @@ public:
 private:
   void VelCallback(const geometry_msgs::Twist::ConstPtr& twist);
   void OverrideCallback(const std_msgs::Bool::ConstPtr& override_msg);
-  void DetectCallback(const std_msgs::Int32::ConstPtr& detect_msg);
+  //void DetectCallback(const std_msgs::Int32::ConstPtr& detect_msg);
   void AutoNav_Control();
   void ManualNav_Control();
   void AssessMove();
@@ -68,7 +68,7 @@ Devastator::Devastator()
   nav_flag_pub = nh_.advertise<std_msgs::Int32>("nav_flag", 1);
   buzz_pub = nh_.advertise<std_msgs::Bool>("buzz_flag", 1);
   override_sub = nh_.subscribe<std_msgs::Bool>("override_status", 10, &Devastator::OverrideCallback, this);
-  detect_sub = nh_.subscribe<std_msgs::Int32>("Detect_Flag", 10, &Devastator::DetectCallback, this);
+  //detect_sub = nh_.subscribe<std_msgs::Int32>("Detect_Flag", 10, &Devastator::DetectCallback, this);
   vel_sub = nh_.subscribe<geometry_msgs::Twist>("cmd_vel", 10, &Devastator::VelCallback, this);
   sonic_FF_sub = nh_.subscribe<sensor_msgs::Range>("sonic_FF", 10, &Devastator::sonic_FF_Callback,this);
   sonic_FD_sub = nh_.subscribe<sensor_msgs::Range>("sonic_FD", 10, &Devastator::sonic_FD_Callback,this);
@@ -80,15 +80,15 @@ Devastator::Devastator()
 }
 
 
-void Devastator::DetectCallback(const std_msgs::Int32::ConstPtr& detect_msg)
+/*void Devastator::DetectCallback(const std_msgs::Int32::ConstPtr& detect_msg)
 {
   detect = detect_msg->data;
 
   if (!detect) {
     first_buzz = true;
-    AutoNav_Control();
+//    AutoNav_Control();
   }
-  else ManualNav_Control();
+//  else //ManualNav_Control();
 
   if (detect && first_buzz){
     buzz_flag.data = true;
@@ -98,7 +98,7 @@ void Devastator::DetectCallback(const std_msgs::Int32::ConstPtr& detect_msg)
   }
 
   buzz_pub.publish(buzz_flag);
-}
+}*/
 
 void Devastator::OverrideCallback(const std_msgs::Bool::ConstPtr& override_msg)
 {
