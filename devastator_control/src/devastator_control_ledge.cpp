@@ -131,7 +131,7 @@ void Devastator::dIR_BL_Callback(const sensor_msgs::Range::ConstPtr& dIR_BL_msg)
 void Devastator::AutoNav_Control()
 {
   float sonic_FF_zone = 0.30;
-  float sonic_FD_zone = 0.40;
+  float sonic_FD_zone = 0.30;
   float aIR_FR_zone = 0.30;
   float aIR_FL_zone = 0.30;
   float dIR_F_zone = 0.0;
@@ -140,7 +140,7 @@ void Devastator::AutoNav_Control()
 
   if (aIR_FR_range > aIR_FR_zone && aIR_FL_range > aIR_FL_zone)
   {
-    if (sonic_FD_range > sonic_FD_zone && sonic_FF_range > sonic_FF_zone and dIR_F_range==dIR_F_zone)
+    if (sonic_FD_range > sonic_FD_zone && sonic_FF_range > sonic_FF_zone)
       FlagPublisher(1);
     else
     {
@@ -188,10 +188,10 @@ void Devastator::AutoNav_Control()
 
     else if (!dIR_BR_range && !dIR_BL_range)
     {
-      if ((sonic_FD_range > sonic_FD_zone && sonic_FF_range > sonic_FF_zone && dIR_F_range==dIR_F_zone) ||
-      (sonic_FD_range > sonic_FD_zone && sonic_FF_range > sonic_FF_zone && dIR_F_range != dIR_F_zone) ||
-      (sonic_FD_range > sonic_FD_zone && sonic_FF_range <= sonic_FF_zone && dIR_F_range==dIR_F_zone) ||
-      (sonic_FD_range <= sonic_FD_zone && sonic_FF_range > sonic_FF_zone && dIR_F_range==dIR_F_zone))
+      if ((sonic_FD_range > sonic_FD_zone && sonic_FF_range > sonic_FF_zone) ||
+      (sonic_FD_range > sonic_FD_zone && sonic_FF_range > sonic_FF_zone) ||
+      (sonic_FD_range > sonic_FD_zone && sonic_FF_range <= sonic_FF_zone) ||
+      (sonic_FD_range <= sonic_FD_zone && sonic_FF_range > sonic_FF_zone))
       {
         if (aIR_FR_range > aIR_FL_range)
           FlagPublisher(2);
