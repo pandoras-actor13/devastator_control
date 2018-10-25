@@ -1,6 +1,13 @@
 //  Devastator bot control module
 //  October 23, 2018
 //  DOST-ASTI, RDD Team
+//-----------Robot Control Flags---------------------
+// 1 - Move Forward
+// 2 - Turn Right
+// 3 - Turn Left
+// 4 - Turn around (Rotate Right)
+// 5 - Move Backward
+// 6 - Stop
 /////////////////////////////////////////////////////////////
 
 #include <ros/ros.h>
